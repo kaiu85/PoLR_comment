@@ -4,6 +4,6 @@ To run you have to:
 
 1.) Add SPM12 to your path variable.
 
-2.) Change your current directory here.
+2.) Change your current Matlab working directory here.
 
 3.) Run sensory_PE_batch.m
