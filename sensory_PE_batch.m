@@ -64,6 +64,7 @@ label_step = 10;
 cmap = parula(n_labels);
 
 ticks = [];
+indices = [];
 
 for i = 1:n_plot
     
@@ -75,6 +76,7 @@ for i = 1:n_plot
         if i == 1
             labels = [labels sprintf('%d',j*label_step)];
             ticks = [ticks 1.0/(n_labels)*j + 0.5/(n_labels)];
+            indices = [indices j*label_step + 1];
         end
     end
     
@@ -92,7 +94,7 @@ xlabel('$X$','Interpreter','latex')
 ylabel('$Y$','Interpreter','latex')
 title(sprintf('Trajectories of %d individuals',n_plot))
 
-n_steps = size(xs,2)
+n_steps = size(xs,2);
 
 corrs = zeros(1,n_steps);
 varsx = zeros(1,n_steps);
@@ -104,22 +106,38 @@ for i = 1:n_steps
     varsy(i) = var(ys(:,i));
 end
 
+FE_mean = mean(Js,1);
+
 subplot(2,2,2)
-plot(mean(Js,1))
+plot(FE_mean,'LineWidth',1.0,'color',c)
+
+hold on;
+scatter(indices, FE_mean(indices),30.0,cmap,'filled');
+hold off;
+
 xlabel('Time step $t$','Interpreter','latex')
 ylabel('$\left<F(t)\right>_{\mathrm{population}}$','Interpreter','latex')
 title({'Time course of population mean of','variational free energy'})
 
 subplot(2,2,3)
-plot(corrs)
+plot(corrs,'LineWidth',1.0,'color',c)
+hold on;
+scatter(indices, corrs(indices),30.0,cmap,'filled');
+hold off;
 xlabel('Time step $t$','Interpreter','latex')
 ylabel('Correlation','Interpreter','latex')
 title({'Time course of correlation','between variables X and Y','within population'})
 
 subplot(2,2,4)
-plot(varsx);
+plot(varsx,'LineWidth',1.0,'color',c);
 hold on;
-plot(varsy);
+plot(varsy,'LineWidth',1.0,'color',0.5*c);
+hold off;
+hold on;
+scatter(indices, varsx(indices),30.0,cmap,'filled');
+hold off;
+hold on;
+scatter(indices, varsy(indices),30.0,cmap,'filled');
 hold off;
 legend({'$X$','$Y$'},'Interpreter','latex')
 xlabel('Time step $t$','Interpreter','latex')
